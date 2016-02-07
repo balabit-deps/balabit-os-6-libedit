@@ -1,0 +1,53 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -61,6 +61,12 @@
+   )]
+ )
+ 
++PKG_CHECK_MODULES(LIBBSD, [libbsd-overlay],
++  [CFLAGS="$CFLAGS $LIBBSD_CFLAGS"
++   LIBS="$LIBS $LIBBSD_LIBS"
++   MODULES="$MODULES libbsd"
++   AC_SUBST([MODULES])]
++)
+ 
+ ### use option --enable-widec to turn on use of wide-character support
+ EL_ENABLE_WIDEC
+@@ -117,24 +123,32 @@
+ #AC_FUNC_REALLOC
+ AC_TYPE_SIGNAL
+ AC_FUNC_STAT
+-AC_CHECK_FUNCS([endpwent isascii memchr memset re_comp regcomp strcasecmp strchr strcspn strdup strerror strrchr strstr strtol issetugid wcsdup strlcpy strlcat fgetln vis strvis strunvis __secure_getenv secure_getenv])
++AC_CHECK_FUNCS([endpwent isascii memchr memset re_comp regcomp strcasecmp strchr strcspn strdup strerror strrchr strstr strtol issetugid __secure_getenv secure_getenv])
++
++# fgetln
++AC_CHECK_FUNCS(fgetln, found_fgetln=yes, found_fgetln=no)
++AM_CONDITIONAL(HAVE_FGETLN, [test "x$found_fgetln" = xyes])
+ 
+ # strlcpy
+-AC_CHECK_FUNC(strlcpy, found_strlcpy=yes, found_strlcpy=no)
++AC_CHECK_FUNCS(strlcpy, found_strlcpy=yes, found_strlcpy=no)
+ AM_CONDITIONAL(HAVE_STRLCPY, [test "x$found_strlcpy" = xyes])
+ 
+ # strlcat
+-AC_CHECK_FUNC(strlcat, found_strlcat=yes, found_strlcat=no)
++AC_CHECK_FUNCS(strlcat, found_strlcat=yes, found_strlcat=no)
+ AM_CONDITIONAL(HAVE_STRLCAT, [test "x$found_strlcat" = xyes])
+ 
+ # vis
+-AC_CHECK_FUNC(vis, found_vis=yes, found_vis=no)
++AC_CHECK_FUNCS(vis, found_vis=yes, found_vis=no)
+ AM_CONDITIONAL(HAVE_VIS, [test "x$found_vis" = xyes])
+ 
+ # unvis
+-AC_CHECK_FUNC(unvis, found_unvis=yes, found_unvis=no)
++AC_CHECK_FUNCS(unvis, found_unvis=yes, found_unvis=no)
+ AM_CONDITIONAL(HAVE_UNVIS, [test "x$found_unvis" = xyes])
+ 
++# wcsdup
++AC_CHECK_FUNCS(wcsdup, found_wcsdup=yes, found_wcsdup=no)
++AM_CONDITIONAL(HAVE_WCSDUP, [test "x$found_wcsdup" = xyes])
++
+ 
+ EL_GETPW_R_POSIX
+ EL_GETPW_R_DRAFT
